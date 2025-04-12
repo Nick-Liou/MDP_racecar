@@ -27,7 +27,6 @@ function [U] = value_iteration(U, R, State_Track, Drive_Track, max_speed, max_ac
         iter = iter + 1 ;
         fprintf('Value Iteration %d\n', iter);
         
-        
         for k = 1:length(row)
             x = row(k);
             y = col(k);        
@@ -70,10 +69,10 @@ function [U] = value_iteration(U, R, State_Track, Drive_Track, max_speed, max_ac
                             u_failed_a = crash_penalty + U(x,y,zero_speed_index,zero_speed_index) ;
                         end
                             
-                        expected_util_after_actions(a) = R +  p * u_with_a + (1-p)*u_failed_a ;
+                        expected_util_after_actions(a) = p * u_with_a + (1-p)*u_failed_a ;
                     end
     
-                    U(x,y,v_x_index,v_y_index) =   gamma * max(expected_util_after_actions); % R(x,y,v_x_index,v_y_index) +
+                    U(x,y,v_x_index,v_y_index) =  R(x,y,v_x_index,v_y_index) + gamma * max(expected_util_after_actions); 
                 
                 end
             end

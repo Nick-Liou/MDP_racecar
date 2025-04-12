@@ -31,10 +31,10 @@ function [total_utility_collected] = run_experiment(U,Policy,R,Drive_Track, Star
         if ~reachable_state( position, next_position , Drive_Track)
             next_position = position ;
             speed_index = [zero_speed_index zero_speed_index] ;
-            total_utility_collected = total_utility_collected + gamma^move * crash_penalty ;
+            total_utility_collected = total_utility_collected + gamma^(move-1) * crash_penalty ;
         end
 
-        total_utility_collected = total_utility_collected + gamma^move * R ; % R(next_position(1),next_position(2),speed_index(1),speed_index(2));
+        total_utility_collected = total_utility_collected + gamma^(move-1) * R(current_state(1),current_state(2),current_state(3),current_state(4)) ; % R(next_position(1),next_position(2),speed_index(1),speed_index(2));
 
         
 
@@ -52,9 +52,8 @@ function [total_utility_collected] = run_experiment(U,Policy,R,Drive_Track, Star
         current_state = [next_position speed_index];
 
         if Finish_Track(current_state(1),current_state(2))
-
-            total_utility_collected = total_utility_collected + gamma^move * goal_utility ;
             move = move + 1 ; 
+            total_utility_collected = total_utility_collected + gamma^(move-1) * goal_utility ;
             extra_string = sprintf("%dη (%d,%d , %d,%d)",move, current_state(3:4) - zero_speed_index , a );
             old_string = path_and_actions{current_state(1),current_state(2)} ;
         
