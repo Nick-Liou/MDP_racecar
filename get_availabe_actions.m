@@ -23,21 +23,25 @@ function [actions_and_new_speeds] = get_availabe_actions(vx, vy, max_speed, max_
     %                             The accelerations and velocities are constrained 
     %                             such that the new velocities do not exceed the max_speed.
 
-    % Initialize an empty array to hold valid actions and new velocities
-    actions_and_new_speeds = [];  
+ 
+    % Preallocate the maximum possible size: (2*max_accel+1)^2 combinations
+    total_combinations = (2*max_accel + 1)^2;
+    actions_and_new_speeds_all = zeros(total_combinations, 4);
 
-    % Loop over all possible accelerations in x and y (ax, ay) ∈ {-max_accel, ..., 0, ..., max_accel}
+    count = 0;  % To keep track of how many valid entries we have
+
     for ax = -max_accel:max_accel
         for ay = -max_accel:max_accel
-            % Compute new velocities based on the current velocity and acceleration
             new_vx = vx + ax;
             new_vy = vy + ay;
 
-            % Check if new velocities are within the bounds of max_speed
             if abs(new_vx) <= max_speed && abs(new_vy) <= max_speed
-                % If valid, add the acceleration and new velocities to the result
-                actions_and_new_speeds(end+1, :) = [ax, ay, new_vx, new_vy];
+                count = count + 1;
+                actions_and_new_speeds_all(count, :) = [ax, ay, new_vx, new_vy];
             end
         end
     end
+
+    % Return only the filled-in part
+    actions_and_new_speeds = actions_and_new_speeds_all(1:count, :);
 end
