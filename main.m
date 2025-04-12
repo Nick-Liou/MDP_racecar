@@ -3,13 +3,13 @@ clear;
 
 %% Initialize parameters
 
-max_speed = 2;  % must be >= 1
+max_speed = 1;  % must be >= 1
 max_accel = 1;  % must be >= 1
 gamma = 1;      % must be in (0,1]
-p = 0.8;        % must be in (0,1]
+p = 1;        % must be in (0,1]
 crash_penalty = -10;    % must be negative
 goal_utility = 100;     % must be positive
-time_step_cost = 1 ;    % must be positive
+time_step_reward = -1 ;    % must be 
 number_of_experiments = 1 ; % per starting state
 save_exp = false ;
 
@@ -37,14 +37,15 @@ At = Drive_Track';          % Transpose the matrix first
 disp(flipud(At))    % Then reverse the rows
 
 % Initialize stantard scores
-R = - time_step_cost * ones([size(Drive_Track) 2*max_speed+1  2*max_speed+1 ]);
-R(6:7,3:5,:,:) = goal_utility - time_step_cost ; 
+R =  time_step_reward * ones([size(Drive_Track) 2*max_speed+1  2*max_speed+1 ]);
+R(6:7,3:5,:,:) = goal_utility + time_step_reward ; 
 R(repmat(~Drive_Track, [1, 1, size(R,3), size(R,4)])) = crash_penalty;
 
 % Initialize utility scores 
 U = zeros([size(Drive_Track) 2*max_speed+1  2*max_speed+1 ]);
 U(6:7,3:5,:,:) = goal_utility  ;
 
+R = time_step_reward 
 %% Solve the problem 
 
 fprintf('Starting value iteration...\n');
@@ -84,7 +85,7 @@ for i = 1:num_states
     for j = 1:number_of_experiments    
         experiment_utilities(j) = run_experiment(U, Policy, R, Drive_Track, ...
             Start_Track, Finish_Track, max_speed, max_accel, p, crash_penalty, ...
-            gamma, start_state, save_exp);
+            goal_utility,gamma, start_state, save_exp);
         
     end
 

@@ -1,20 +1,7 @@
-function [total_utility_collected] = run_experiment(U,Policy,R,Drive_Track, Start_Track, Finish_Track,max_speed,max_accel,p,crash_penalty,gamma ,current_state, save_exp )
+function [total_utility_collected] = run_experiment(U,Policy,R,Drive_Track, Start_Track, Finish_Track,max_speed,max_accel,p,crash_penalty,goal_utility,gamma ,current_state, save_exp )
  
     max_moves = 1000 ;
     zero_speed_index = max_speed + 1 ;
-
-    % 
-    % % Find linear indices of all true elements
-    % trueIndices = find(Start_Track);
-    % 
-    % % Randomly select one of the true indices
-    % randomIndex = trueIndices(randi(numel(trueIndices)));
-    % 
-    % % Convert linear index to row and column subscripts
-    % [x, y] = ind2sub(size(Start_Track), randomIndex);
-    
-    % Starting state (with zero speed)
-    % current_state = [x y zero_speed_index zero_speed_index] ;
 
     
     expected_utility = U(current_state(1),current_state(2),current_state(3),current_state(4)) ;
@@ -47,7 +34,7 @@ function [total_utility_collected] = run_experiment(U,Policy,R,Drive_Track, Star
             total_utility_collected = total_utility_collected + gamma^move * crash_penalty ;
         end
 
-        total_utility_collected = total_utility_collected + gamma^move * R(next_position(1),next_position(2),speed_index(1),speed_index(2));
+        total_utility_collected = total_utility_collected + gamma^move * R ; % R(next_position(1),next_position(2),speed_index(1),speed_index(2));
 
         
 
@@ -65,6 +52,8 @@ function [total_utility_collected] = run_experiment(U,Policy,R,Drive_Track, Star
         current_state = [next_position speed_index];
 
         if Finish_Track(current_state(1),current_state(2))
+
+            total_utility_collected = total_utility_collected + gamma^move * goal_utility ;
             move = move + 1 ; 
             extra_string = sprintf("%dη (%d,%d , %d,%d)",move, current_state(3:4) - zero_speed_index , a );
             old_string = path_and_actions{current_state(1),current_state(2)} ;
