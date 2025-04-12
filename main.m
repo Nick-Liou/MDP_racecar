@@ -1,6 +1,8 @@
 
 clear;
 
+%% Initialize parameters
+
 max_speed = 2;  % must be >= 1
 max_accel = 1;  % must be >= 1
 gamma = 1;      % must be in (0,1]
@@ -8,7 +10,7 @@ p = 0.8;        % must be in (0,1]
 crash_penalty = -10;    % must be negative
 goal_utility = 100;     % must be positive
 time_step_cost = 1 ;    % must be positive
-number_of_experiments = 1000 ; % per starting state
+number_of_experiments = 1 ; % per starting state
 save_exp = false ;
 
 % Create the track (drivable spaces) and Start , Finish
@@ -31,9 +33,8 @@ State_Track(Finish_Track) = false; %Remove the finish line from the states
 
 
 % Print the track (similar to the provided diagram)
-At = Drive_Track';                % Transpose the matrix first
-disp(At(end:-1:1, :));      % Then reverse the rows
-
+At = Drive_Track';          % Transpose the matrix first
+disp(flipud(At))    % Then reverse the rows
 
 % Initialize stantard scores
 R = - time_step_cost * ones([size(Drive_Track) 2*max_speed+1  2*max_speed+1 ]);
@@ -44,18 +45,22 @@ R(repmat(~Drive_Track, [1, 1, size(R,3), size(R,4)])) = crash_penalty;
 U = zeros([size(Drive_Track) 2*max_speed+1  2*max_speed+1 ]);
 U(6:7,3:5,:,:) = goal_utility  ;
 
+%% Solve the problem 
 
+fprintf('Starting value iteration...\n');
 tic
-U = value_iteration(U,R,State_Track,Drive_Track,max_speed,max_accel,gamma,p,crash_penalty);
-toc
+U = value_iteration(U, R, State_Track, Drive_Track, max_speed, max_accel, gamma, p, crash_penalty);
+fprintf('Value iteration completed in %.4f seconds.\n\n', toc);
 
-% print_utils(U,max_speed)
+% print_utils(U, max_speed)
 
+fprintf('Deriving optimal policy from utility values...\n');
 tic
-Policy = optimal_policy(U,State_Track,Drive_Track,max_speed,max_accel,p,crash_penalty);
-toc
+Policy = optimal_policy(U, State_Track, Drive_Track, max_speed, max_accel, p, crash_penalty);
+fprintf('Optimal policy derivation completed in %.4f seconds.\n\n', toc);
 
 % print_policy(Policy, max_speed)
+
 
 
 
@@ -87,7 +92,8 @@ for i = 1:num_states
     fprintf('For %d runs: Expected utility: %.2f   |   Avg utility collected: %.2f\n\n', ...
             number_of_experiments, expected_utility, avg_utility);
 end
-toc
+fprintf('Experiments completed in %.4f seconds.\n\n', toc);
+
 
 
 

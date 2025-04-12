@@ -11,7 +11,9 @@ function [] = print_utils(U,max_speed)
             u_slice=u_slice';
     
             fprintf('\nUtilites for v_x and v_y: (%d, %d)\n', v_x, v_y);
-            disp(u_slice(end:-1:1, :))
+            % disp(u_slice(end:-1:1, :))
+            disp(flipud(u_slice))
+            
         end
     end
 

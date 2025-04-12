@@ -1,23 +1,3 @@
-% function [] = print_policy(Policy,max_speed)
-% 
-%     for v_x_index = 1:2*max_speed+1 
-%         v_x = -max_speed-1 + v_x_index;
-%         for v_y_index = 1:2*max_speed+1 
-%             v_y = -max_speed-1 + v_y_index;
-% 
-%             u_slice = Policy(:,:,v_x_index,v_y_index);
-% 
-%             % u_slice(~Drive_Track) = 0 ;
-%             u_slice=u_slice';
-% 
-%             fprintf('\nPolicies for v_x and v_y: (%d, %d)\n', v_x, v_y);
-%             disp(u_slice(end:-1:1, :))
-% 
-%         end
-%     end
-% 
-% end
-
 function [] = print_policy(Policy, max_speed)
     % print_policy displays the actions in the Policy for all velocity combinations
     %

@@ -27,6 +27,7 @@ function [U] = value_iteration(U, R, State_Track, Drive_Track, max_speed, max_ac
         iter = iter + 1 ;
         fprintf('Value Iteration %d\n', iter);
         
+        
         for k = 1:length(row)
             x = row(k);
             y = col(k);        
