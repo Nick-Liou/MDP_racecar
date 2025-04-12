@@ -72,7 +72,7 @@ function [U] = value_iteration(U, R, State_Track, Drive_Track, max_speed, max_ac
                         expected_util_after_actions(a) = p * u_with_a + (1-p)*u_failed_a ;
                     end
     
-                    U(x,y,v_x_index,v_y_index) = gamma * R(x,y,v_x_index,v_y_index) + gamma * max(expected_util_after_actions); 
+                    U(x,y,v_x_index,v_y_index) =  R(x,y,v_x_index,v_y_index) + gamma * max(expected_util_after_actions); 
                 
                 end
             end

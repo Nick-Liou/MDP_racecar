@@ -4,11 +4,11 @@ clear;
 max_speed = 2;  % must be >= 1
 max_accel = 1;  % must be >= 1
 gamma = 1;      % must be in (0,1]
-p = 1;        % must be in (0,1]
+p = 0.8;        % must be in (0,1]
 crash_penalty = -10;    % must be negative
 goal_utility = 100;     % must be positive
 time_step_cost = 1 ;    % must be positive
-number_of_experiments = 1 ; % per starting state
+number_of_experiments = 1000 ; % per starting state
 save_exp = false ;
 
 % Create the track (drivable spaces) and Start , Finish

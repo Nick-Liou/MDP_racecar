@@ -15,6 +15,7 @@ function [Policy] = optimal_policy(U, State_Track, Drive_Track, max_speed, max_a
     %   Policy         - A cell array containing optimal action [ax, ay] at each state.
 
     Policy = cell(size(U));
+    zero_speed_index = max_speed + 1 ;
 
     [row, col] = find(State_Track); 
     
@@ -47,7 +48,7 @@ function [Policy] = optimal_policy(U, State_Track, Drive_Track, max_speed, max_a
                             max_speed+1+actions_and_speeds(a,4)...
                             ) ;     
                     else
-                        u_with_a = crash_penalty;
+                        u_with_a = crash_penalty + U(x,y,zero_speed_index,zero_speed_index) ;
                     end
 
                     % Location of the next state if action 'a' fails
@@ -55,7 +56,7 @@ function [Policy] = optimal_policy(U, State_Track, Drive_Track, max_speed, max_a
                     if reachable_state( s, s_hat_hat, Drive_Track)
                         u_failed_a = U(s_hat_hat(1), s_hat_hat(2) ,v_x_index, v_y_index) ;     
                     else
-                        u_failed_a = crash_penalty;
+                        u_failed_a = crash_penalty + U(x,y,zero_speed_index,zero_speed_index) ;
                     end
                         
                     expected_util_after_actions(a) = p * u_with_a + (1-p)*u_failed_a ;
