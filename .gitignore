@@ -1,3 +1,4 @@
 *.asv
 *.xlsx
 old_tests/*.m
+experiments/*
