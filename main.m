@@ -5,13 +5,13 @@ clear;
 
 max_speed = 2;  % must be >= 1
 max_accel = 1;  % must be >= 1
-gamma = 0.9;      % must be in (0,1]
+gamma = 1;      % must be in (0,1]
 p = 0.8;        % must be in (0,1]
 crash_penalty = -10;    % must be negative
 goal_utility = 100;     % must be positive
 time_step_reward = -1 ;    % must be 
-number_of_experiments = 1000 ; % per starting state
-save_exp = false ;
+number_of_experiments = 10^3 ; % per starting state
+save_exp = false ;      % Saving the experiments is SLOW 
 
 % Create the track (drivable spaces) and Start , Finish
 Drive_Track = false(16,12) ;
@@ -34,6 +34,7 @@ State_Track(Finish_Track) = false; %Remove the finish line from the states
 
 % Print the track (similar to the provided diagram)
 At = Drive_Track';          % Transpose the matrix first
+fprintf('Drivable track:\n');
 disp(flipud(At))    % Then reverse the rows
 
 % Initialize stantard scores
@@ -90,11 +91,10 @@ for i = 1:num_states
     end
 
     avg_utility = mean(experiment_utilities);
-    fprintf('For %d runs: Expected utility: %.2f   |   Avg utility collected: %.2f\n\n', ...
+    fprintf('For %d runs: Expected utility: %.5f   |   Avg utility collected: %.5f\n\n', ...
             number_of_experiments, expected_utility, avg_utility);
 end
 fprintf('Experiments completed in %.4f seconds.\n\n', toc);
-
 
 
 
